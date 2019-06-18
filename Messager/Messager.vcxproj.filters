@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{df322eaf-91eb-42d5-88b9-10d2d8c32c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\headers">
+      <UniqueIdentifier>{887ffb3b-7af8-446d-b2b5-5b5827ac6696}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="socket.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="socket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="messager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
