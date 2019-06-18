@@ -134,6 +134,7 @@
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="messager.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>

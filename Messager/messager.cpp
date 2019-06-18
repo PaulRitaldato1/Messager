@@ -65,15 +65,26 @@ void Messager::checkEscapeKeyPress(std::function<void()> func) {
 
 bool Messager::startMessaging() {
 
+	//read messages constantly
 	std::async([this]() {
 		while (!kill) {
 			std::cout << sock.read();
 		}
 	});
 
+
+	//check for escape key press
+	std::async([this]() {
+		while (!kill) {
+			checkEscapeKeyPress([this]() {std::cout << "Escape key pressed, leaving chat room." << std::endl; kill = true; });
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		}
+		});
+
 	while (!kill) {
-		std::string message;
+		std::string message = "";
 		getline(std::cin, message);
+		sock.sendMsg(message);
 	}
 
 
