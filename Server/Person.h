@@ -3,6 +3,7 @@
 
 class Person {
 public:
+	Person(BaseSocket& socket) : _socket(socket) {}
 	inline bool send(std::string message) {
 		_socket.sendMsg(message);
 	}

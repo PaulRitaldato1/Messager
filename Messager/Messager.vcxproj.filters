@@ -9,9 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>src\headers</Filter>
-    </ClInclude>
     <ClInclude Include="socket.h">
       <Filter>src\headers</Filter>
     </ClInclude>

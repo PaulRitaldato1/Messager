@@ -6,7 +6,9 @@ class Chatroom {
 public:
 	Chatroom();
 	void startChatroom();
-	bool addPerson(Person& personToAdd);
+	bool addPerson(Person& personToAdd) {
+		participants.emplace_back(personToAdd);
+	}
 	inline bool sendAll(std::string message) {
 		for (Person p : participants) {
 			p.send(message);
@@ -18,7 +20,7 @@ public:
 	}
 private:
 	std::mutex socketIO;
-	static int chatID;
+	int chatID;
 	BaseSocket chatRoomSock;
 	std::vector<Person> participants;
 };

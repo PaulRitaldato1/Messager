@@ -5,7 +5,9 @@
 class Server {
 public:
 	Server();
+	void createChatRoom();
 private:
+	static int chatIDs;
 	ServerSocket _listener;
 	std::vector<Chatroom> rooms;
 

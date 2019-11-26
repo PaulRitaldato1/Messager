@@ -12,5 +12,20 @@
     <ClInclude Include="common.h">
       <Filter>src\headers</Filter>
     </ClInclude>
+    <ClInclude Include="chatroom.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Person.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSocket.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Messager\ThreadPool.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
