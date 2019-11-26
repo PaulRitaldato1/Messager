@@ -6,18 +6,16 @@
 class MessagerListener {
 public:
 	//TODO: add listeners to log stuff
-	void onEscapeKey();
+	inline void onEscapeKey() {
+		std::cout << "Escape pressed" << std::endl;
+	}
 };
 class Messager {
-	Messager(ClientSocket& sock) : sock(sock) { 
-		kill = false; 
-	};
 public:
-
+	Messager(ClientSocket& sock) : sock(sock) {
+		kill = false;
+	};
 	void manager();
-	bool startMessaging();
-	bool validateUsername();
-
 private:
 
 	std::atomic<bool> kill;
@@ -27,4 +25,7 @@ private:
 
 	void chooseRoom();
 	void checkEscapeKeyPress(std::function<void()> func);
+	bool validateUsername();
+	void startMessaging();
+
 };

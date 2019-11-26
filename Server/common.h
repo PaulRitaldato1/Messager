@@ -1,10 +1,6 @@
 #pragma once
 /* C networking headers */
 
-
-
-#include <winsock2.h>
-#include <windows.h>
 //#include <unistd.h>
 //#include <sys/socket.h>
 //#include <netinet/in.h>

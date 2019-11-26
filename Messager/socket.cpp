@@ -3,6 +3,46 @@
 ClientSocket::ClientSocket(std::string hostname, std::string ip) {
 
 	//create socket
+#ifdef _WIN32
+	int resultHandler;
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	resultHandler = getaddrinfo(ip.c_str(), std::to_string(port).c_str(), &hints, &result);
+	if (resultHandler != 0) {
+		char error[50];
+		sprintf_s(error, 50, "getaddrinfo failed: %d\n", resultHandler);
+		WSACleanup();
+		throw std::runtime_error(error);
+	}
+
+	ptr = result;
+	_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+	if (_socket == INVALID_SOCKET) {
+		char error[50];
+		sprintf_s(error, 50, "Error at socket(): %ld\n", WSAGetLastError());
+		freeaddrinfo(result);
+		WSACleanup();
+		throw std::runtime_error(error);
+	}
+
+	resultHandler = connect(_socket, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
+	if (resultHandler == SOCKET_ERROR) {
+		closesocket(_socket);
+		_socket = INVALID_SOCKET;
+	}
+
+	//TODO, IF CONNECT FAILS, CHECK NEXT ADDRESS IN RESULT
+
+	freeaddrinfo(result);
+	if (_socket == INVALID_SOCKET) {
+		WSACleanup();
+		throw std::runtime_error("Could not connect to server");
+	}
+
+#elif linux
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socket < 0) {
 		std::cerr << "Failed to create socket!" << std::endl;
@@ -29,6 +69,17 @@ ClientSocket::ClientSocket(std::string hostname, std::string ip) {
 	if (connect(_socket, (struct sockaddr*) & serverAddress, sizeof(serverAddress)) < 0) {
 		throw new std::runtime_error("Error: Could not connect to server.");
 	}
+#endif
+	
+}
+
+ClientSocket::~ClientSocket() {
+#ifdef _WIN32
+	shutdown(_socket, SD_BOTH);
+	closesocket(_socket);
+	WSACleanup();
+#elif linux
+#endif
 }
 
 int ClientSocket::resolveHostname(const char* hostname, std::string& ip) {
@@ -37,7 +88,7 @@ int ClientSocket::resolveHostname(const char* hostname, std::string& ip) {
 	//hints.ai_flags = AF_INET;
 	//hints.ai_protocol = SOCK_STREAM;
 	
-	hostent* host = gethostbyname(hostname);
+	/*hostent* host = gethostbyname(hostname);
 	if (host == NULL) {
 		return -1;
 	}
@@ -45,15 +96,15 @@ int ClientSocket::resolveHostname(const char* hostname, std::string& ip) {
 	in_addr* address = (in_addr*)host->h_addr;
 	ip = inet_ntoa(*address);
 	return 0;
-
+*/
 }
 std::string ClientSocket::read() {
 	
-	char* tmpLen;
+	char* tmpLen = nullptr;
 	socketIO.lock();
 	int readBytes = recv(_socket, tmpLen, sizeof(char), 0);
 	if (readBytes <= 0) {
-		throw new std::runtime_error("Connection closed");
+		throw std::runtime_error("Connection closed");
 	}
 	int size = *tmpLen - '0';
 	//extract the size, create a buffer the appropriate size
@@ -61,13 +112,12 @@ std::string ClientSocket::read() {
 	msg = new(std::nothrow) char[size + 1]();
 
 	if (!msg) {
-		std::cerr << "ClientSocket::read(): Failed to allocate memory for message\n";
-		return;
+		throw std::runtime_error("ClientSocket::read(): Failed to allocate memory for message\n");
 	}
 	msg[size] = '\0';
 	readBytes = recv(_socket, msg, size, 0);
 	if (readBytes <= 0) {
-		throw new std::runtime_error("Connection closed");
+		throw std::runtime_error("Connection closed");
 	}
 	socketIO.unlock();
 	
@@ -79,6 +129,30 @@ std::string ClientSocket::read() {
 }
 
 void ClientSocket::sendMsg(std::string s) {
+
+#ifdef _WIN32
+	int error = 0;
+	uint32_t length = s.length();
+	char* len = nullptr;
+	*len = '0' + length;
+	socketIO.lock();
+	send(_socket, len, sizeof(char), 0);
+	if (error == SOCKET_ERROR) {
+		socketIO.unlock();
+		closesocket(_socket);
+		WSACleanup();
+		throw std::runtime_error("Send Failed");
+	}
+
+	send(_socket, s.c_str(), s.length(), 0);
+	if (error == SOCKET_ERROR) {
+		socketIO.unlock();
+		closesocket(_socket);
+		WSACleanup();
+		throw std::runtime_error("Second Send Failed");
+	}
+	socketIO.unlock();
+#elif linux
 	uint32_t length = htonl(s.length());
 	char* len;
 	*len = '0' + length;
@@ -86,4 +160,5 @@ void ClientSocket::sendMsg(std::string s) {
 	send(_socket, len, sizeof(char), 0);
 	send(_socket, s.c_str(), s.length(), 0);
 	socketIO.unlock();
+#endif
 }

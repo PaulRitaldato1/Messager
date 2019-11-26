@@ -38,7 +38,7 @@ bool Messager::validateUsername() {
 		}
 
 	} while (!isValid);
-
+	return isValid;
 }
 
 void Messager::chooseRoom() {
@@ -63,7 +63,7 @@ void Messager::checkEscapeKeyPress(std::function<void()> func) {
 
 }
 
-bool Messager::startMessaging() {
+void Messager::startMessaging() {
 
 	//read messages constantly
 	std::async([this]() {

@@ -2,10 +2,7 @@
 
 
 
-#include <winsock2.h>
-#include <Ws2tcpip.h>
-#include <windows.h>
-#include <WinUser.h>
+
 //#include <unistd.h>
 //#include <sys/socket.h>
 //#include <netinet/in.h>
