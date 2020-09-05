@@ -1,31 +1,36 @@
 #pragma once
 
 #include "common.h"
-#include "socket.h"
-
+#include "Sockets/ISocket.h"
+#include "Threading/ThreadPool.h"
 class MessagerListener {
 public:
 	//TODO: add listeners to log stuff
-	inline void onEscapeKey() {
-		std::cout << "Escape pressed" << std::endl;
+	inline void onEscapeKey() 
+	{
+		std::printf("Escape pressed\n");
 	}
 };
-class Messager {
+
+class Messager 
+{
 public:
-	Messager(ClientSocket& sock) : sock(sock) {
-		kill = false;
+	Messager(std::shared_ptr<ISocket> sock) : m_pool(2)
+	{
+		m_kill = false;
+		m_sock = sock;
 	};
 	void manager();
 private:
 
-	std::atomic<bool> kill;
+	std::atomic<bool> m_kill;
 	friend class MessagerListener;
-	MessagerListener listener;
-	ClientSocket& sock;
-
+	MessagerListener m_listener;
+	std::shared_ptr<ISocket> m_sock;
+	ThreadPool m_pool;
 	void chooseRoom();
 	void checkEscapeKeyPress(std::function<void()> func);
-	bool validateUsername();
+	void validateUsername();
 	void startMessaging();
 
 };

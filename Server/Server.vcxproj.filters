@@ -7,6 +7,21 @@
     <Filter Include="src\headers">
       <UniqueIdentifier>{fa683261-628f-4a1d-a5f4-8178fca1b283}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Sockets">
+      <UniqueIdentifier>{8285f211-52f8-47c2-8ed4-013e18ee4eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Threading">
+      <UniqueIdentifier>{640b1178-144f-4e3a-8f3d-6026a6fd55d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sockets\Headers">
+      <UniqueIdentifier>{b83ed8db-c1e9-41c2-8d1f-6cb0f977a96d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Server">
+      <UniqueIdentifier>{7662d217-3ecc-4d5b-b63a-793bb63d9b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Server\Headers">
+      <UniqueIdentifier>{83cdf3f9-7710-44db-8713-5d9786c20cc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -18,14 +33,34 @@
     <ClInclude Include="Person.h">
       <Filter>src\headers</Filter>
     </ClInclude>
-    <ClInclude Include="ServerSocket.h">
-      <Filter>src\headers</Filter>
+    <ClInclude Include="..\Messager\Threading\ThreadPool.h">
+      <Filter>src\Threading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Messager\ThreadPool.h">
+    <ClInclude Include="IServerSocket.h">
+      <Filter>src\Sockets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsServerSocket.h">
+      <Filter>src\Sockets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Guid.h">
       <Filter>src\headers</Filter>
     </ClInclude>
     <ClInclude Include="Server.h">
-      <Filter>src\headers</Filter>
+      <Filter>src\Server\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Messager\Sockets\ISocket.h">
+      <Filter>src\Sockets\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WindowsServerSocket.cpp">
+      <Filter>src\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>src\Server</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

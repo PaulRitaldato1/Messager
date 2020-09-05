@@ -1,26 +1,16 @@
 #include "Messager.h"
 
 void Messager::manager() {
-	std::cout << "Hello! Welcome to Paul's ananymous messaging CLI client.\n\n";
+	std::cout << "Hello! Welcome to Paul's anonymous messaging CLI client.\n\n";
 
-	bool validUsername = false;
-	do {	
-		validUsername = validateUsername();
-
-		do {
-			checkEscapeKeyPress([]() { std::cout << "Escape key pressed. Exiting messager...\n\n"; exit(0); });
-			chooseRoom();
-			startMessaging();
-
-		} while (true);
-	} while (!validUsername);
+	validateUsername();
+	chooseRoom();
+	startMessaging();
 }
 
-bool Messager::validateUsername() {
+void Messager::validateUsername() {
 
 	std::string command = "v";
-
-	bool isValid = false;
 
 	do {
 		std::cout << "Please create a username to use while messaging (no spaces allowed): ";
@@ -28,63 +18,67 @@ bool Messager::validateUsername() {
 		std::string username = "";
 		std::cin >> username;
 
-		sock.sendMsg(command + " " + username);
-		std::string response = sock.read();
+		std::string msg = command + " " + username;
+		m_sock->sendSocket(msg);
+		std::string response = m_sock->readSocket();
 
 		if (response == "y")
-			isValid = true;
+			break;
 		else {
-			std::cout << "Invalid username, it is taken." << std::endl;
+			std::cout << "Invalid username, it is taken or wrong." << std::endl;
 		}
 
-	} while (!isValid);
-	return isValid;
+	} while (true);
 }
 
-void Messager::chooseRoom() {
+void Messager::chooseRoom() 
+{
 	std::string  command = "c";
-	sock.sendMsg(command);
+	m_sock->sendSocket(command);
 
-	std::cout << sock.read();
+	std::cout << m_sock->readSocket();
 
 	int response = -1;
 	std::cin >> response;
-	sock.sendMsg(std::to_string(response));
+	std::string res = std::to_string(response);
+	m_sock->sendSocket(res);
 	
-	std::cout << sock.read();
+	std::cout << m_sock->readSocket();
 }
 
-void Messager::checkEscapeKeyPress(std::function<void()> func) {
-
-	if (GetAsyncKeyState(VK_ESCAPE)) {
-		listener.onEscapeKey();
-		func();
-	}
+void Messager::checkEscapeKeyPress(std::function<void()> func) 
+{
+	
+	//if (GetAsyncKeyState(VK_ESCAPE)) 
+	//{
+	//	m_listener.onEscapeKey();
+	//	func();
+	//}
 
 }
 
 void Messager::startMessaging() {
 
 	//read messages constantly
-	std::async([this]() {
-		while (!kill) {
-			std::cout << sock.read();
+	m_pool.enqueue([this] {
+		while (!m_kill) 
+		{
+			std::cout << m_sock->readSocket();
+		}
+	});
+	
+	//check for escape key press
+	m_pool.enqueue([this]() {
+		while (!m_kill) {
+			checkEscapeKeyPress([this]() {std::cout << "Escape key pressed, leaving chat room." << std::endl; m_kill = true; });
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	});
 
-
-	//check for escape key press
-	std::async([this]() {
-		while (!kill) {
-			checkEscapeKeyPress([this]() {std::cout << "Escape key pressed, leaving chat room." << std::endl; kill = true; });
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
-		});
-
-	while (!kill) {
+	while (!m_kill) {
 		std::string message = "";
 		getline(std::cin, message);
-		sock.sendMsg(message);
+		m_sock->sendSocket(message);
 	}
 
 

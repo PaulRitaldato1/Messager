@@ -9,25 +9,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="socket.h">
-      <Filter>src\headers</Filter>
-    </ClInclude>
     <ClInclude Include="common.h">
       <Filter>src\headers</Filter>
     </ClInclude>
     <ClInclude Include="Messager.h">
       <Filter>src\headers</Filter>
     </ClInclude>
+    <ClInclude Include="Sockets\UnixClientSocket.h" />
+    <ClInclude Include="Sockets\WindowsClientSocket.h">
+      <Filter>src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sockets\ISocket.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="socket.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="messager.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="client.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Sockets\WindowsClientSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sockets\UnixClientSocket.cpp" />
   </ItemGroup>
 </Project>

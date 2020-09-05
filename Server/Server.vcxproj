@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,12 +124,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Messager\ThreadPool.h" />
+    <ClInclude Include="..\Messager\Sockets\ISocket.h" />
+    <ClInclude Include="..\Messager\Threading\ThreadPool.h" />
     <ClInclude Include="chatroom.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="IServerSocket.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="ServerSocket.h" />
+    <ClInclude Include="Guid.h" />
+    <ClInclude Include="WindowsServerSocket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="server.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="WindowsServerSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

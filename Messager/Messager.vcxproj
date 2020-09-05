@@ -91,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,12 +131,15 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="Messager.h" />
-    <ClInclude Include="socket.h" />
+    <ClInclude Include="Sockets\ISocket.h" />
+    <ClInclude Include="Sockets\UnixClientSocket.h" />
+    <ClInclude Include="Sockets\WindowsClientSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="messager.cpp" />
-    <ClCompile Include="socket.cpp" />
+    <ClCompile Include="Sockets\UnixClientSocket.cpp" />
+    <ClCompile Include="Sockets\WindowsClientSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
