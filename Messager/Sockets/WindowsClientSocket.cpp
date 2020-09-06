@@ -4,9 +4,14 @@
 
 WindowsClientSocket::WindowsClientSocket(std::string&& hostname, std::string&& ip, std::string&& port) 
 {
+	std::printf("Fresh WindowsClientSocket constructing\n");
+	int resultHandler;
+	resultHandler = WSAStartup(MAKEWORD(2, 2), &m_wsaData);
+	if (resultHandler != 0) {
+		printf("WSAStartup failed with error: %d\n", resultHandler);
+	}
 
 	//create socket
-	int resultHandler;
 	addrinfo hints;
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
@@ -64,76 +69,40 @@ WindowsClientSocket::WindowsClientSocket(std::string&& hostname, std::string&& i
 
 }
 
-WindowsClientSocket::~WindowsClientSocket() 
-{
-	std::printf("WindowsClientSocket destructor called\n");
-	shutdown(m_socket, SD_BOTH);
-	closesocket(m_socket);
-	WSACleanup();
-}
+//std::string WindowsClientSocket::readSocket() 
+//{
+//	
+//	
+//
+//}
 
-std::string WindowsClientSocket::readSocket() 
-{
-	
-	char* tmpLen = nullptr;
-	char* msg = nullptr;
-
-	{
-		std::scoped_lock<std::mutex> lock(socketIO);
-		int readBytes = recv(m_socket, tmpLen, sizeof(char), 0);
-		if (readBytes <= 0)
-		{
-			return "";
-		}
-		int size = *tmpLen - '0';
-		//extract the size, create a buffer the appropriate size
-		msg = new(std::nothrow) char[size + 1]();
-
-		if (!msg)
-		{
-			throw std::runtime_error("ClientSocket::readSocket(): Failed to allocate memory for message\n");
-		}
-		msg[size] = '\0';
-		readBytes = recv(m_socket, msg, size, 0);
-		if (readBytes <= 0)
-		{
-			throw std::runtime_error("Connection closed");
-		}
-	}
-	std::string message(msg);
-	delete[] msg;
-
-	return message;
-
-}
-
-void WindowsClientSocket::sendSocket(std::string& s)
-{
-
-	int error = 0;
-	std::size_t length = s.length();
-	char* len = nullptr;
-	*len = '0' + length;
-	
-	{
-		std::scoped_lock<std::mutex> lock(socketIO);
-
-		send(m_socket, len, sizeof(char), 0);
-		if (error == SOCKET_ERROR)
-		{
-			closesocket(m_socket);
-			WSACleanup();
-			throw std::runtime_error("Send Failed");
-		}
-
-		send(m_socket, s.c_str(), (int)s.length(), 0);
-		if (error == SOCKET_ERROR)
-		{
-			closesocket(m_socket);
-			WSACleanup();
-			throw std::runtime_error("Second Send Failed");
-		}
-	}
-}
+//void WindowsClientSocket::sendSocket(std::string& s)
+//{
+//
+//	int error = 0;
+//	std::size_t length = s.length();
+//	char* len = nullptr;
+//	*len = '0' + length;
+//	
+//	{
+//		std::scoped_lock<std::mutex> lock(socketIO);
+//
+//		send(m_socket, len, sizeof(char), 0);
+//		if (error == SOCKET_ERROR)
+//		{
+//			closesocket(m_socket);
+//			WSACleanup();
+//			throw std::runtime_error("Send Failed");
+//		}
+//
+//		send(m_socket, s.c_str(), (int)s.length(), 0);
+//		if (error == SOCKET_ERROR)
+//		{
+//			closesocket(m_socket);
+//			WSACleanup();
+//			throw std::runtime_error("Second Send Failed");
+//		}
+//	}
+//}
 
 #endif

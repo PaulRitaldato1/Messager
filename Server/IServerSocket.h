@@ -1,10 +1,25 @@
 #pragma once
-#include "../Messager/Sockets/WindowsClientSocket.h"
+#include "../Messager/Sockets/ISocket.h"
 
-class IServerSocket : public ISocket
+class IServerSocket
 {
 public:
-	virtual std::shared_ptr<ISocket> startConnectionListening() = 0;
-private:
-
+	virtual ~IServerSocket()
+	{
+		std::printf("IServerSocket destructor called!\n");
+	}
+	virtual std::shared_ptr<ISocket> startConnectionListening()
+	{
+		std::printf("IServerSocket startConnectionListening called!\n");
+		return std::shared_ptr<ISocket>();
+	}
+#ifdef _WIN32
+	virtual SOCKET getRawSocket()
+	{
+		std::printf("IServerSocket getRawSocket called!\n");
+		SOCKET sock = INVALID_SOCKET;
+		return sock;
+	}
+#else
+#endif
 };

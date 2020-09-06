@@ -14,13 +14,34 @@ protected:
 	std::mutex socketIO;
 
 public:
-	virtual ~ISocket();
-	virtual std::string readSocket() = 0;
-	virtual void sendSocket(std::string& s) = 0;
+	virtual ~ISocket() 
+	{
+		std::printf("ISocket destructor called!\n");
+	};
 
-	virtual void setSocketNonBlocking() = 0;
+	virtual std::string readSocket()
+	{
+		std::printf("ISocket readSocket called!\n");
+		return "";
+	}
+
+	virtual void sendSocket(std::string& s)\
+	{
+		std::printf("ISocket sendSocket called!\n");
+	}
+
+	virtual void setSocketNonBlocking()
+	{
+		std::printf("ISocket setSocketNonBlocking called!\n");
+	}
+
 #ifdef _WIN32
-	virtual SOCKET getRawSocket() = 0;
+	virtual SOCKET getRawSocket()
+	{
+		std::printf("ISocket getRawSocket called!\n");
+		SOCKET sock = INVALID_SOCKET;
+		return sock;
+	}
 #else
 #endif
 

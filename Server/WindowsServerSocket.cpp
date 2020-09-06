@@ -4,6 +4,13 @@ WindowsServerSocket::WindowsServerSocket()
 {
 	struct addrinfo* result = nullptr, hints;
 
+	int resultHandler;
+	resultHandler = WSAStartup(MAKEWORD(2, 2), &m_wsaData);
+	if (resultHandler != 0) 
+	{
+		printf("WSAStartup failed with error: %d\n", resultHandler);
+	}
+
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
@@ -28,6 +35,17 @@ WindowsServerSocket::WindowsServerSocket()
 		WSACleanup();
 		throw std::runtime_error("");
 	}
+
+	resultH = bind(m_socket, result->ai_addr, (int)result->ai_addrlen);
+	if (resultH == SOCKET_ERROR)
+	{
+		printf("bind failed with error: %d\n", WSAGetLastError());
+		freeaddrinfo(result);
+		closesocket(m_socket);
+		WSACleanup();
+	}
+
+	freeaddrinfo(result);
 
 	if (listen(m_socket, SOMAXCONN) == SOCKET_ERROR) {
 		printf("Listen failed with error: %ld\n", WSAGetLastError());

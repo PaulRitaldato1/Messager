@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IServerSocket.h"
+
 #ifdef _WIN32
 #include "../Messager/Sockets/WindowsClientSocket.h"
 #include <string>
@@ -14,10 +15,13 @@ class WindowsServerSocket  : public IServerSocket
 {
 public:
 	WindowsServerSocket();
-	~WindowsServerSocket();
-	std::string readSocket() { return ""; }
-	
-	void sendSocket(std::string& s) {}
+	~WindowsServerSocket()
+	{
+		std::printf("WindowsServerSocket destructor called\n");
+		shutdown(m_socket, SD_SEND);
+		closesocket(m_socket);
+		WSACleanup();
+	}
 	
 	std::shared_ptr<ISocket> startConnectionListening();
 	
@@ -26,13 +30,10 @@ public:
 		return m_socket;
 	}
 	
-	void setSocketNonBlocking()
-	{
-		unsigned long nonBlock = 1;
-		ioctlsocket(m_socket, FIONBIO, &nonBlock);
-	}
 private:
 	SOCKET m_socket;
+	WSADATA m_wsaData;
+
 };
 
 #endif
