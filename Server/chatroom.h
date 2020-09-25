@@ -26,7 +26,7 @@ public:
 		std::for_each(std::execution::par, m_participants.begin(), m_participants.end(), 
 			[=](std::shared_ptr<Person> p) 
 			{ 
-				if (p->getGuid() == excludedGuid)
+				if (p->getGuid() != excludedGuid)
 				{
 					p->send(message);
 				}
