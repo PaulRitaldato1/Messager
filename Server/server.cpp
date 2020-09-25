@@ -93,7 +93,7 @@ void Server::handleNewConnection(std::shared_ptr<Person> newConnection)
 			}
 			else
 			{
-				newConnection->send("You chose not to create a chatroom so im disconnecting your ass.\n");
+				newConnection->send("You chose not to create a chatroom so im disconnecting you.\n");
 				return;
 			}
 		}
@@ -120,14 +120,14 @@ void Server::handleNewConnection(std::shared_ptr<Person> newConnection)
 			}
 			else
 			{
-				newConnection->send("Fuck you dude put in a real index, im closing you out\n");
+				newConnection->send("You didnt put in a real index, im closing you out\n");
 			}
 		}
 		m_peopleConnected.push_back(newConnection);
 	}
 	else
 	{
-		newConnection->send("You did something the server didnt like asshole. Disconnecting you.\n");
+		newConnection->send("You did something the server didnt like. Disconnecting you.\n");
 		return;
 	}
 }
